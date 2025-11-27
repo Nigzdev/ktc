@@ -17,12 +17,12 @@ import {
 } from "lucide-react";
 
 // Import images
-import heroImage from "@/assets/hero-taekwondo.jpg";
-import instructorImage from "@/assets/instructor.jpg";
-import gallery1 from "@/assets/gallery-1.jpg";
-import gallery2 from "@/assets/gallery-2.jpg";
-import gallery3 from "@/assets/gallery-3.jpg";
-import gallery4 from "@/assets/gallery-4.jpg";
+import heroImage from "@/assets/hero-kick.png";
+import instructorImage from "@/assets/instructor-teaching.png";
+import gallery1 from "@/assets/students-medals.png";
+import gallery2 from "@/assets/trophy.png";
+import gallery3 from "@/assets/club-exterior.png";
+import gallery4 from "@/assets/hero-kick.png";
 
 const Index = () => {
   return (
