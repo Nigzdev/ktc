@@ -71,8 +71,8 @@ const Index = () => {
               </h2>
               <div className="space-y-4 text-lg text-muted-foreground">
                 <p>
-                  <strong className="text-foreground">Master Kim Chen</strong> is a 5th-degree black belt with over 20 years of teaching experience. 
-                  Certified by the World Taekwondo Federation, Master Chen has trained hundreds of students from beginners to championship competitors.
+                  <strong className="text-foreground">Khatri sir</strong> is a 5th-degree black belt with over 20 years of teaching experience. 
+                  Certified by the World Taekwondo Federation, Khatri sir has trained hundreds of students from beginners to championship competitors.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <Badge variant="secondary" className="flex items-center gap-2">
@@ -488,12 +488,12 @@ const Index = () => {
       {/* Footer */}
       <footer className="bg-secondary text-secondary-foreground py-8">
         <div className="max-w-6xl mx-auto px-6 text-center">
-          <p className="text-lg mb-2">Elite Taekwondo Training Club</p>
+          <p className="text-lg mb-2">KTC Academy</p>
           <p className="text-sm opacity-80">
             Building character, confidence, and champions since 2005
           </p>
           <p className="text-xs opacity-60 mt-4">
-            © 2024 Elite Taekwondo Training Club. All rights reserved.
+            © 2024 KTC Academy. All rights reserved.
           </p>
         </div>
       </footer>
