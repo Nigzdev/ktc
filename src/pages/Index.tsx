@@ -17,12 +17,12 @@ import {
 } from "lucide-react";
 
 // Import images
-import heroImage from "@/assets/hero-kick.png";
-import instructorImage from "@/assets/instructor-teaching.png";
-import gallery1 from "@/assets/students-medals.png";
-import gallery2 from "@/assets/trophy.png";
-import gallery3 from "@/assets/club-exterior.png";
-import gallery4 from "@/assets/hero-kick.png";
+import heroImage from "@/assets/hero-group.jpg";
+import instructorImage from "@/assets/instructor-belt.jpg";
+import gallery1 from "@/assets/gallery-certificate.jpg";
+import gallery2 from "@/assets/gallery-outdoor.jpg";
+import gallery3 from "@/assets/gallery-training.jpg";
+import gallery4 from "@/assets/gallery-practice.jpg";
 
 const Index = () => {
   return (
@@ -60,7 +60,7 @@ const Index = () => {
             <div className="animate-fade-in">
               <img 
                 src={instructorImage} 
-                alt="Master Instructor"
+                alt="Khatri sir teaching belt tying technique to student"
                 className="rounded-lg shadow-2xl w-full"
               />
             </div>
@@ -350,28 +350,28 @@ const Index = () => {
             <div className="overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
               <img 
                 src={gallery1} 
-                alt="Training Session"
+                alt="Student receiving certificate at belt ceremony with Khatri sir"
                 className="w-full h-80 object-cover hover:scale-110 transition-transform duration-500"
               />
             </div>
             <div className="overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
               <img 
                 src={gallery2} 
-                alt="Sparring Practice"
+                alt="Outdoor training session with Khatri sir and students"
                 className="w-full h-80 object-cover hover:scale-110 transition-transform duration-500"
               />
             </div>
             <div className="overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
               <img 
                 src={gallery3} 
-                alt="Belt Ceremony"
+                alt="Students practicing stances in the dojang"
                 className="w-full h-80 object-cover hover:scale-110 transition-transform duration-500"
               />
             </div>
             <div className="overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
               <img 
                 src={gallery4} 
-                alt="Group Photo"
+                alt="Students training on the mat"
                 className="w-full h-80 object-cover hover:scale-110 transition-transform duration-500"
               />
             </div>
