@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -23,12 +24,15 @@ import gallery1 from "@/assets/gallery-certificate.jpg";
 import gallery2 from "@/assets/gallery-outdoor.jpg";
 import gallery3 from "@/assets/gallery-training.jpg";
 import gallery4 from "@/assets/gallery-practice.jpg";
+import logo from "@/assets/ktc-logo.png";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
+      <Navigation />
+      
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -54,7 +58,7 @@ const Index = () => {
       </section>
 
       {/* About Instructor Section */}
-      <section className="section-padding bg-muted/30">
+      <section id="about" className="section-padding bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="animate-fade-in">
@@ -99,7 +103,7 @@ const Index = () => {
       </section>
 
       {/* Class Schedule Section */}
-      <section className="section-padding bg-background">
+      <section id="schedule" className="section-padding bg-background">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Class Schedule</h2>
@@ -194,7 +198,7 @@ const Index = () => {
       </section>
 
       {/* Membership Plans Section */}
-      <section className="section-padding bg-muted/30">
+      <section id="membership" className="section-padding bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Membership Plans</h2>
@@ -340,7 +344,7 @@ const Index = () => {
       </section>
 
       {/* Gallery Section */}
-      <section className="section-padding bg-muted/30">
+      <section id="gallery" className="section-padding bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Gallery</h2>
@@ -380,7 +384,7 @@ const Index = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="section-padding bg-background">
+      <section id="contact" className="section-padding bg-background">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Get in Touch</h2>
@@ -486,15 +490,21 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-secondary text-secondary-foreground py-8">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <p className="text-lg mb-2">KTC Academy</p>
-          <p className="text-sm opacity-80">
-            Building character, confidence, and champions since 2005
-          </p>
-          <p className="text-xs opacity-60 mt-4">
-            © 2024 KTC Academy. All rights reserved.
-          </p>
+      <footer className="bg-secondary text-secondary-foreground py-12">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex flex-col items-center gap-6">
+            <img src={logo} alt="KTC Academy Logo" className="w-20 h-20" />
+            <div className="text-center">
+              <p className="text-xl font-bold mb-2">KTC Academy</p>
+              <p className="text-sm opacity-80 mb-1">Khatri Taekwondo Club</p>
+              <p className="text-sm opacity-80">
+                Building character, confidence, and champions since 2005
+              </p>
+            </div>
+            <p className="text-xs opacity-60 mt-4">
+              © 2024 KTC Academy. All rights reserved.
+            </p>
+          </div>
         </div>
       </footer>
     </div>
