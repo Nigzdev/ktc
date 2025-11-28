@@ -75,13 +75,13 @@ const Index = () => {
               </h2>
               <div className="space-y-4 text-lg text-muted-foreground">
                 <p>
-                  <strong className="text-foreground">Khatri sir</strong> is a 5th-degree black belt with over 20 years of teaching experience. 
+                  <strong className="text-foreground">Khatri sir</strong> is a 3rd Dan black belt with extensive teaching experience. 
                   Certified by the World Taekwondo Federation, Khatri sir has trained hundreds of students from beginners to championship competitors.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <Badge variant="secondary" className="flex items-center gap-2">
                     <Award className="w-4 h-4" />
-                    5th Degree Black Belt
+                    3rd Dan Black Belt
                   </Badge>
                   <Badge variant="secondary" className="flex items-center gap-2">
                     <Shield className="w-4 h-4" />
@@ -89,7 +89,7 @@ const Index = () => {
                   </Badge>
                   <Badge variant="secondary" className="flex items-center gap-2">
                     <Users className="w-4 h-4" />
-                    20+ Years Experience
+                    Expert Instructor
                   </Badge>
                 </div>
                 <p className="pt-4 border-l-4 border-primary pl-4 italic">
