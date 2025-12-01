@@ -65,7 +65,7 @@ const Index = () => {
               <img 
                 src={instructorImage} 
                 alt="Khatri sir teaching belt tying technique to student"
-                className="rounded-lg shadow-2xl w-full"
+                className="rounded-lg shadow-2xl w-full h-auto object-contain"
               />
             </div>
             <div className="space-y-6">
@@ -487,7 +487,7 @@ const Index = () => {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="KTC Academy Location"
+                  title="KTC Club Location"
                   className="w-full h-full"
                 ></iframe>
               </div>
@@ -500,16 +500,16 @@ const Index = () => {
       <footer className="bg-secondary text-secondary-foreground py-12">
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex flex-col items-center gap-6">
-            <img src={logo} alt="KTC Academy Logo" className="w-20 h-20" />
+            <img src={logo} alt="KTC Club Logo" className="w-20 h-20" />
             <div className="text-center">
-              <p className="text-xl font-bold mb-2">KTC Academy</p>
+              <p className="text-xl font-bold mb-2">KTC Club</p>
               <p className="text-sm opacity-80 mb-1">Khatri Taekwondo Club</p>
               <p className="text-sm opacity-80">
                 Building character, confidence, and champions since 2005
               </p>
             </div>
             <p className="text-xs opacity-60 mt-4">
-              © 2024 KTC Academy. All rights reserved.
+              © 2024 KTC Club. All rights reserved.
             </p>
           </div>
         </div>
