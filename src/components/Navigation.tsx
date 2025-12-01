@@ -33,9 +33,9 @@ const Navigation = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => scrollToSection("hero")}>
-            <img src={logo} alt="KTC Academy Logo" className="w-12 h-12 md:w-16 md:h-16" />
+            <img src={logo} alt="KTC Club Logo" className="w-12 h-12 md:w-16 md:h-16" />
             <div className="hidden sm:block">
-              <div className="text-lg md:text-xl font-bold text-foreground">KTC Academy</div>
+              <div className="text-lg md:text-xl font-bold text-foreground">KTC Club</div>
               <div className="text-xs text-muted-foreground">Khatri Taekwondo Club</div>
             </div>
           </div>
