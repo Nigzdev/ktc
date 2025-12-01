@@ -14,7 +14,8 @@ import {
   Shield, 
   Target, 
   Heart,
-  CheckCircle2
+  CheckCircle2,
+  MessageCircle
 } from "lucide-react";
 
 // Import images
@@ -447,6 +448,15 @@ const Index = () => {
                       <div>
                         <h3 className="font-semibold text-lg mb-1">Phone</h3>
                         <p className="text-muted-foreground">+91 93547 20445</p>
+                        <a 
+                          href="https://wa.me/919354720445"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 mt-2 text-sm text-primary hover:text-primary/80 transition-colors"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          Chat on WhatsApp
+                        </a>
                       </div>
                     </div>
 
