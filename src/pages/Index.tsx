@@ -433,9 +433,9 @@ const Index = () => {
                       <div>
                         <h3 className="font-semibold text-lg mb-1">Location</h3>
                         <p className="text-muted-foreground">
-                          123 Martial Arts Way<br />
-                          Suite 100<br />
-                          Your City, ST 12345
+                          Rajendra Nagar Sector 2<br />
+                          Shahibabad<br />
+                          Near Karan Gate Police Choki
                         </p>
                       </div>
                     </div>
