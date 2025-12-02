@@ -403,7 +403,7 @@ const Index = () => {
                       </div>
                       <div>
                         <h3 className="font-semibold text-lg mb-1">Email</h3>
-                        <p className="text-muted-foreground">info@tkdclub.com</p>
+                        <p className="text-muted-foreground">bkhatri899@gmail.com</p>
                       </div>
                     </div>
 
