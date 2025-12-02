@@ -424,20 +424,25 @@ const Index = () => {
                 </CardContent>
               </Card>
 
-              {/* Google Maps Embed */}
-              <div className="w-full h-64 rounded-lg overflow-hidden shadow-lg">
+              {/* Google Maps */}
+              <a 
+                href="https://www.google.com/maps/search/Rajendra+Nagar+Sector+2+Shahibabad+Near+Karan+Gate+Police+Choki"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full h-64 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+              >
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3503.7471628890844!2d77.34616207549856!3d28.577464875698307!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce4f7fb3a20dd%3A0x9e7c8b0c5b0c5b0c!2sKhatri%20Taekwondo%20Club!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
+                  src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Rajendra+Nagar+Sector+2,Shahibabad,Ghaziabad"
                   width="100%"
                   height="100%"
-                  style={{ border: 0 }}
+                  style={{ border: 0, pointerEvents: 'none' }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   title="KTC Club Location"
                   className="w-full h-full"
                 ></iframe>
-              </div>
+              </a>
             </div>
           </div>
         </div>
