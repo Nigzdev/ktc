@@ -110,13 +110,13 @@ const Index = () => {
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Class Schedule</h2>
             <p className="text-xl text-muted-foreground">Choose the class that fits your level and schedule</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             {/* Beginner Class */}
             <Card className="hover:shadow-xl transition-shadow duration-300">
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-2xl">Beginner</CardTitle>
-                  <Badge className="bg-accent text-accent-foreground">Ages 6+</Badge>
+                  <CardTitle className="text-2xl">Beginners</CardTitle>
+                  <Badge className="bg-accent text-accent-foreground">New Students</Badge>
                 </div>
                 <CardDescription className="text-base">
                   Perfect for those new to Taekwondo
@@ -126,8 +126,8 @@ const Index = () => {
                 <div className="flex items-start gap-2">
                   <Calendar className="w-5 h-5 text-primary mt-1" />
                   <div>
-                    <p className="font-semibold">Monday & Wednesday</p>
-                    <p className="text-sm text-muted-foreground">5:00 PM - 6:00 PM</p>
+                    <p className="font-semibold">Monday - Friday</p>
+                    <p className="text-sm text-muted-foreground">6:00 PM - 7:00 PM</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
@@ -139,57 +139,29 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            {/* Intermediate Class */}
+            {/* Intermediate & Advanced Class */}
             <Card className="hover:shadow-xl transition-shadow duration-300 border-primary">
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-2xl">Intermediate</CardTitle>
+                  <CardTitle className="text-2xl">Intermediate & Advanced</CardTitle>
                   <Badge className="bg-primary text-primary-foreground">Yellow Belt+</Badge>
                 </div>
                 <CardDescription className="text-base">
-                  Advancing techniques and sparring
+                  Advanced techniques, sparring & competition prep
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-start gap-2">
                   <Calendar className="w-5 h-5 text-primary mt-1" />
                   <div>
-                    <p className="font-semibold">Tuesday & Thursday</p>
-                    <p className="text-sm text-muted-foreground">6:00 PM - 7:15 PM</p>
+                    <p className="font-semibold">Monday - Friday</p>
+                    <p className="text-sm text-muted-foreground">8:00 PM - 9:00 PM</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Target className="w-5 h-5 text-primary mt-1" />
                   <div>
-                    <p className="text-sm">Advanced kicks, poomsae, and light sparring</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Advanced Class */}
-            <Card className="hover:shadow-xl transition-shadow duration-300">
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-2xl">Advanced</CardTitle>
-                  <Badge className="bg-secondary text-secondary-foreground">Blue Belt+</Badge>
-                </div>
-                <CardDescription className="text-base">
-                  Competition prep and mastery
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-start gap-2">
-                  <Calendar className="w-5 h-5 text-primary mt-1" />
-                  <div>
-                    <p className="font-semibold">Monday, Wednesday, Friday</p>
-                    <p className="text-sm text-muted-foreground">7:30 PM - 9:00 PM</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2">
-                  <Target className="w-5 h-5 text-primary mt-1" />
-                  <div>
-                    <p className="text-sm">Competition sparring, board breaking, mastery</p>
+                    <p className="text-sm">Advanced kicks, poomsae, sparring & competition training</p>
                   </div>
                 </div>
               </CardContent>
