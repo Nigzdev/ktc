@@ -174,15 +174,41 @@ const Index = () => {
       <section id="membership" className="section-padding bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Membership Plans</h2>
-            <p className="text-xl text-muted-foreground">Flexible options to fit your commitment level</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Fee Structure</h2>
+            <p className="text-xl text-muted-foreground">Simple and affordable pricing for everyone</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Monthly Plan */}
+          <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+            {/* Admission Fee */}
+            <Card className="hover:shadow-xl transition-shadow duration-300 border-2 border-primary">
+              <CardHeader className="text-center">
+                <CardTitle className="text-3xl mb-2">Admission Fee</CardTitle>
+                <div className="text-4xl font-bold text-primary">₹2,500</div>
+                <CardDescription className="text-base">One-time payment</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-primary" />
+                  <span>Complete training uniform included</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-primary" />
+                  <span>Registration & enrollment</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-primary" />
+                  <span>Access to all class levels</span>
+                </div>
+                <Button className="w-full mt-6">
+                  Join Now
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Monthly Fee */}
             <Card className="hover:shadow-xl transition-shadow duration-300">
               <CardHeader className="text-center">
-                <CardTitle className="text-3xl mb-2">Monthly</CardTitle>
-                <div className="text-4xl font-bold text-primary">$99</div>
+                <CardTitle className="text-3xl mb-2">Monthly Fee</CardTitle>
+                <div className="text-4xl font-bold text-primary">₹1,500</div>
                 <CardDescription className="text-base">per month</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -192,80 +218,11 @@ const Index = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>Access to all equipment</span>
+                  <span>All skill levels welcome</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-primary" />
                   <span>Belt testing included</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>No long-term commitment</span>
-                </div>
-                <Button className="w-full mt-6" variant="outline">
-                  Enroll Now
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Quarterly Plan */}
-            <Card className="hover:shadow-xl transition-shadow duration-300 border-2 border-primary relative">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <Badge className="bg-accent text-accent-foreground text-sm px-4 py-1">
-                  BEST VALUE
-                </Badge>
-              </div>
-              <CardHeader className="text-center">
-                <CardTitle className="text-3xl mb-2">Quarterly</CardTitle>
-                <div className="text-4xl font-bold text-primary">$259</div>
-                <CardDescription className="text-base">3 months • Save $38</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>Everything in Monthly</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>Free training uniform</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>Private lesson credit</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>13% savings</span>
-                </div>
-                <Button className="w-full mt-6">
-                  Enroll Now
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Annual Plan */}
-            <Card className="hover:shadow-xl transition-shadow duration-300">
-              <CardHeader className="text-center">
-                <CardTitle className="text-3xl mb-2">Annual</CardTitle>
-                <div className="text-4xl font-bold text-primary">$899</div>
-                <CardDescription className="text-base">12 months • Save $289</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>Everything in Quarterly</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>Premium sparring gear</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>2 private lessons/month</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>24% savings</span>
                 </div>
                 <Button className="w-full mt-6" variant="outline">
                   Enroll Now
