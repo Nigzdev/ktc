@@ -48,12 +48,16 @@ const Index = () => {
             Discipline • Confidence • Fitness • Self-Defense
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-            <Button variant="hero" size="lg" className="text-lg">
-              Join Classes
-            </Button>
-            <Button variant="heroOutline" size="lg" className="text-lg">
-              View Schedule
-            </Button>
+            <a href="https://wa.me/919354720445?text=Hi%2C%20I%20want%20to%20join%20KTC%20Taekwondo%20classes" target="_blank" rel="noopener noreferrer">
+              <Button variant="hero" size="lg" className="text-lg">
+                Join Classes
+              </Button>
+            </a>
+            <a href="#schedule">
+              <Button variant="heroOutline" size="lg" className="text-lg">
+                View Schedule
+              </Button>
+            </a>
           </div>
         </div>
       </section>
@@ -198,9 +202,11 @@ const Index = () => {
                   <CheckCircle2 className="w-5 h-5 text-primary" />
                   <span>Access to all class levels</span>
                 </div>
-                <Button className="w-full mt-6">
-                  Join Now
-                </Button>
+                <a href="https://wa.me/919354720445?text=Hi%2C%20I%20want%20to%20join%20KTC%20Taekwondo%20classes" target="_blank" rel="noopener noreferrer" className="w-full">
+                  <Button className="w-full mt-6">
+                    Join Now
+                  </Button>
+                </a>
               </CardContent>
             </Card>
 
@@ -224,9 +230,11 @@ const Index = () => {
                   <CheckCircle2 className="w-5 h-5 text-primary" />
                   <span>Belt testing included</span>
                 </div>
-                <Button className="w-full mt-6" variant="outline">
-                  Enroll Now
-                </Button>
+                <a href="https://wa.me/919354720445?text=Hi%2C%20I%20want%20to%20enroll%20for%20monthly%20classes" target="_blank" rel="noopener noreferrer" className="w-full">
+                  <Button className="w-full mt-6" variant="outline">
+                    Enroll Now
+                  </Button>
+                </a>
               </CardContent>
             </Card>
           </div>
