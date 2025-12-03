@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { LogOut, Upload, Trash2, Plus, Clock, Image } from 'lucide-react';
+import { LogOut, Trash2, Plus, Clock, Image } from 'lucide-react';
 import logo from '@/assets/ktc-logo.png';
 
 interface GalleryPhoto {
@@ -26,7 +26,7 @@ interface ClassSchedule {
 }
 
 const Admin = () => {
-  const { user, isAdmin, loading, signOut } = useAuth();
+  const { isAdmin, logout } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -45,17 +45,17 @@ const Admin = () => {
   });
 
   useEffect(() => {
-    if (!loading && (!user || !isAdmin)) {
+    if (!isAdmin) {
       navigate('/auth');
     }
-  }, [user, isAdmin, loading, navigate]);
+  }, [isAdmin, navigate]);
 
   useEffect(() => {
-    if (user && isAdmin) {
+    if (isAdmin) {
       fetchPhotos();
       fetchSchedules();
     }
-  }, [user, isAdmin]);
+  }, [isAdmin]);
 
   const fetchPhotos = async () => {
     const { data, error } = await supabase
@@ -196,17 +196,13 @@ const Admin = () => {
     }
   };
 
-  const handleSignOut = async () => {
-    await signOut();
+  const handleSignOut = () => {
+    logout();
     navigate('/');
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Loading...</p>
-      </div>
-    );
+  if (!isAdmin) {
+    return null;
   }
 
   return (
