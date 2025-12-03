@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -460,7 +461,13 @@ const Index = () => {
                 Building character, confidence, and champions since 2005
               </p>
             </div>
-            <p className="text-xs opacity-60 mt-4">
+            <Link 
+              to="/auth" 
+              className="text-xs opacity-60 hover:opacity-100 transition-opacity mt-4"
+            >
+              Admin Login
+            </Link>
+            <p className="text-xs opacity-60">
               © 2024 KTC Club. All rights reserved.
             </p>
           </div>
