@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Navigation from "@/components/Navigation";
@@ -18,6 +19,7 @@ import {
   CheckCircle2,
   MessageCircle
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 // Import images
 import heroImage from "@/assets/hero-group.jpg";
@@ -28,7 +30,29 @@ import gallery3 from "@/assets/gallery-training.jpg";
 import gallery4 from "@/assets/gallery-practice.jpg";
 import logo from "@/assets/ktc-logo.png";
 
+interface GalleryPhoto {
+  id: string;
+  image_url: string;
+  title: string | null;
+}
+
 const Index = () => {
+  const [dbPhotos, setDbPhotos] = useState<GalleryPhoto[]>([]);
+
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      const { data } = await supabase
+        .from('gallery_photos')
+        .select('id, image_url, title')
+        .eq('is_active', true)
+        .order('display_order', { ascending: true });
+      
+      if (data) {
+        setDbPhotos(data);
+      }
+    };
+    fetchPhotos();
+  }, []);
   return (
     <div className="min-h-screen">
       <Navigation />
@@ -290,6 +314,17 @@ const Index = () => {
             <p className="text-xl text-muted-foreground">Moments from our training sessions and ceremonies</p>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
+            {/* Database photos */}
+            {dbPhotos.map((photo) => (
+              <div key={photo.id} className="rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-muted/50 flex items-center justify-center p-4">
+                <img 
+                  src={photo.image_url} 
+                  alt={photo.title || "Gallery photo"}
+                  className="w-full h-auto object-contain hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+            ))}
+            {/* Static photos */}
             <div className="rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-muted/50 flex items-center justify-center p-4">
               <img 
                 src={gallery1} 
