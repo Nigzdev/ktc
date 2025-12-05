@@ -6,8 +6,19 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+
+// Admin components
+import AdminLayout from "./components/admin/AdminLayout";
+import DashboardOverview from "./pages/admin/DashboardOverview";
+import ContentManager from "./pages/admin/ContentManager";
+import ImageManager from "./pages/admin/ImageManager";
+import ScheduleManager from "./pages/admin/ScheduleManager";
+import PricingManager from "./pages/admin/PricingManager";
+import AchievementsManager from "./pages/admin/AchievementsManager";
+import GalleryManager from "./pages/admin/GalleryManager";
+import SiteSettings from "./pages/admin/SiteSettings";
+import ContactSettings from "./pages/admin/ContactSettings";
 
 const queryClient = new QueryClient();
 
@@ -21,8 +32,20 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/admin" element={<Admin />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            
+            {/* Admin Routes */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<DashboardOverview />} />
+              <Route path="content" element={<ContentManager />} />
+              <Route path="images" element={<ImageManager />} />
+              <Route path="schedule" element={<ScheduleManager />} />
+              <Route path="pricing" element={<PricingManager />} />
+              <Route path="achievements" element={<AchievementsManager />} />
+              <Route path="gallery" element={<GalleryManager />} />
+              <Route path="settings" element={<SiteSettings />} />
+              <Route path="contact" element={<ContactSettings />} />
+            </Route>
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

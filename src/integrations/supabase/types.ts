@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          achievement_date: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          achievement_date?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          achievement_date?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       class_schedule: {
         Row: {
           class_name: string
@@ -86,6 +122,81 @@ export type Database = {
         }
         Relationships: []
       }
+      page_blocks: {
+        Row: {
+          block_key: string
+          block_type: string
+          content: Json
+          created_at: string | null
+          display_order: number | null
+          id: string
+          is_active: boolean | null
+          page_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          block_key: string
+          block_type: string
+          content?: Json
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          page_name?: string
+          updated_at?: string | null
+        }
+        Update: {
+          block_key?: string
+          block_type?: string
+          content?: Json
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          page_name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      pricing_plans: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          duration: string
+          features: string[] | null
+          id: string
+          is_active: boolean | null
+          is_featured: boolean | null
+          plan_name: string
+          price: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          duration: string
+          features?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          plan_name: string
+          price: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          duration?: string
+          features?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          plan_name?: string
+          price?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -104,6 +215,30 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      website_settings: {
+        Row: {
+          created_at: string | null
+          id: string
+          setting_key: string
+          setting_value: Json
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          setting_key: string
+          setting_value?: Json
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          setting_key?: string
+          setting_value?: Json
+          updated_at?: string | null
         }
         Relationships: []
       }
