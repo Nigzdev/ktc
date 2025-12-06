@@ -479,46 +479,49 @@ const Index = () => {
               {getContent('gallery_info', 'subtitle', 'Moments from our training sessions and ceremonies')}
             </p>
           </div>
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Database photos */}
-            {dbPhotos.map((photo) => (
-              <div key={photo.id} className="rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-muted/50 flex items-center justify-center p-4">
-                <img 
-                  src={photo.image_url} 
-                  alt={photo.title || "Gallery photo"}
-                  className="w-full h-auto object-contain hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-            ))}
-            {/* Static photos */}
-            <div className="rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-muted/50 flex items-center justify-center p-4">
-              <img 
-                src={gallery1} 
-                alt="Student receiving certificate at belt ceremony with Khatri sir"
-                className="w-full h-auto object-contain hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-            <div className="rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-muted/50 flex items-center justify-center p-4">
-              <img 
-                src={gallery2} 
-                alt="Outdoor training session with Khatri sir and students"
-                className="w-full h-auto object-contain hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-            <div className="rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-muted/50 flex items-center justify-center p-4">
-              <img 
-                src={gallery3} 
-                alt="Students practicing stances in the dojang"
-                className="w-full h-auto object-contain hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-            <div className="rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-muted/50 flex items-center justify-center p-4">
-              <img 
-                src={gallery4} 
-                alt="Students training on the mat"
-                className="w-full h-auto object-contain hover:scale-105 transition-transform duration-500"
-              />
-            </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {dbPhotos.length > 0 ? (
+              dbPhotos.map((photo) => (
+                <div key={photo.id} className="rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-muted/50 flex items-center justify-center p-4">
+                  <img 
+                    src={photo.image_url} 
+                    alt={photo.title || "Gallery photo"}
+                    className="w-full h-auto object-contain hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              ))
+            ) : (
+              <>
+                <div className="rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-muted/50 flex items-center justify-center p-4">
+                  <img 
+                    src={gallery1} 
+                    alt="Student receiving certificate at belt ceremony with Khatri sir"
+                    className="w-full h-auto object-contain hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <div className="rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-muted/50 flex items-center justify-center p-4">
+                  <img 
+                    src={gallery2} 
+                    alt="Outdoor training session with Khatri sir and students"
+                    className="w-full h-auto object-contain hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <div className="rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-muted/50 flex items-center justify-center p-4">
+                  <img 
+                    src={gallery3} 
+                    alt="Students practicing stances in the dojang"
+                    className="w-full h-auto object-contain hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <div className="rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-muted/50 flex items-center justify-center p-4">
+                  <img 
+                    src={gallery4} 
+                    alt="Students training on the mat"
+                    className="w-full h-auto object-contain hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>
