@@ -36,23 +36,108 @@ interface GalleryPhoto {
   title: string | null;
 }
 
+interface PageBlock {
+  block_key: string;
+  content: Record<string, any>;
+}
+
+interface PricingPlan {
+  id: string;
+  plan_name: string;
+  price: number;
+  duration: string;
+  features: string[] | null;
+  is_featured: boolean | null;
+}
+
+interface ClassSchedule {
+  id: string;
+  class_name: string;
+  days: string;
+  start_time: string;
+  end_time: string;
+  level: string | null;
+}
+
+interface ContactInfo {
+  phone: string;
+  address: string;
+  email: string;
+}
+
 const Index = () => {
   const [dbPhotos, setDbPhotos] = useState<GalleryPhoto[]>([]);
+  const [pageBlocks, setPageBlocks] = useState<Record<string, Record<string, any>>>({});
+  const [pricingPlans, setPricingPlans] = useState<PricingPlan[]>([]);
+  const [schedules, setSchedules] = useState<ClassSchedule[]>([]);
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPhotos = async () => {
-      const { data } = await supabase
-        .from('gallery_photos')
-        .select('id, image_url, title')
-        .eq('is_active', true)
-        .order('display_order', { ascending: true });
+    const fetchAllData = async () => {
+      setLoading(true);
       
-      if (data) {
-        setDbPhotos(data);
+      // Fetch all data in parallel
+      const [photosRes, blocksRes, pricingRes, schedulesRes, contactRes] = await Promise.all([
+        supabase
+          .from('gallery_photos')
+          .select('id, image_url, title')
+          .eq('is_active', true)
+          .order('display_order', { ascending: true }),
+        supabase
+          .from('page_blocks')
+          .select('block_key, content')
+          .eq('is_active', true),
+        supabase
+          .from('pricing_plans')
+          .select('*')
+          .eq('is_active', true)
+          .order('display_order', { ascending: true }),
+        supabase
+          .from('class_schedule')
+          .select('*')
+          .eq('is_active', true)
+          .order('display_order', { ascending: true }),
+        supabase
+          .from('website_settings')
+          .select('setting_value')
+          .eq('setting_key', 'contact')
+          .maybeSingle()
+      ]);
+      
+      if (photosRes.data) setDbPhotos(photosRes.data);
+      
+      if (blocksRes.data) {
+        const blocksMap: Record<string, Record<string, any>> = {};
+        blocksRes.data.forEach((block: PageBlock) => {
+          blocksMap[block.block_key] = block.content as Record<string, any>;
+        });
+        setPageBlocks(blocksMap);
       }
+      
+      if (pricingRes.data) setPricingPlans(pricingRes.data);
+      if (schedulesRes.data) setSchedules(schedulesRes.data);
+      if (contactRes.data) setContactInfo(contactRes.data.setting_value as unknown as ContactInfo);
+      
+      setLoading(false);
     };
-    fetchPhotos();
+    
+    fetchAllData();
   }, []);
+
+  // Get content from page blocks with fallback
+  const getContent = (blockKey: string, field: string, fallback: string) => {
+    return pageBlocks[blockKey]?.[field] || fallback;
+  };
+
+  const formatTime = (time: string) => {
+    const [hours, minutes] = time.split(':');
+    const h = parseInt(hours);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const hour12 = h % 12 || 12;
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
   return (
     <div className="min-h-screen">
       <Navigation />
@@ -67,15 +152,15 @@ const Index = () => {
         />
         <div className="relative z-10 text-center px-6 max-w-5xl animate-fade-in">
           <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6">
-            Empowering Students Through <span className="text-primary">Taekwondo</span> Excellence
+            {getContent('hero_main', 'title', 'Empowering Students Through')} <span className="text-primary">Taekwondo</span> Excellence
           </h1>
           <p className="text-xl md:text-2xl text-primary-foreground mb-4 font-semibold">
-            Discipline • Confidence • Fitness • Self-Defense
+            {getContent('hero_main', 'subtitle', 'Discipline • Confidence • Fitness • Self-Defense')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
             <a href="https://wa.me/919354720445?text=Hi%2C%20I%20want%20to%20join%20KTC%20Taekwondo%20classes" target="_blank" rel="noopener noreferrer">
               <Button variant="hero" size="lg" className="text-lg">
-                Join Classes
+                {getContent('hero_main', 'cta_text', 'Join Classes')}
               </Button>
             </a>
             <a href="#schedule">
@@ -101,17 +186,17 @@ const Index = () => {
             <div className="space-y-6">
               <Badge className="bg-primary text-primary-foreground">Master Instructor</Badge>
               <h2 className="text-4xl md:text-5xl font-bold text-foreground">
-                Meet Your Instructor
+                {getContent('about_main', 'title', 'Meet Your Instructor')}
               </h2>
               <div className="space-y-4 text-lg text-muted-foreground">
                 <p>
-                  <strong className="text-foreground">Khatri sir</strong> is a 3rd Dan black belt with extensive teaching experience. 
-                  Certified by the World Taekwondo Federation, Khatri sir has trained hundreds of students from beginners to championship competitors.
+                  <strong className="text-foreground">{getContent('about_main', 'instructor_name', 'Khatri sir')}</strong> is a {getContent('about_main', 'instructor_title', '3rd Dan black belt')} with extensive teaching experience. 
+                  {getContent('about_main', 'description', 'Certified by the World Taekwondo Federation, he has trained hundreds of students from beginners to championship competitors.')}
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <Badge variant="secondary" className="flex items-center gap-2">
                     <Award className="w-4 h-4" />
-                    3rd Dan Black Belt
+                    {getContent('about_main', 'instructor_title', '3rd Dan Black Belt')}
                   </Badge>
                   <Badge variant="secondary" className="flex items-center gap-2">
                     <Shield className="w-4 h-4" />
@@ -119,7 +204,7 @@ const Index = () => {
                   </Badge>
                   <Badge variant="secondary" className="flex items-center gap-2">
                     <Users className="w-4 h-4" />
-                    Expert Instructor
+                    {getContent('about_main', 'experience_years', '10+')} Years Experience
                   </Badge>
                 </div>
                 <p className="pt-4 border-l-4 border-primary pl-4 italic">
@@ -136,65 +221,97 @@ const Index = () => {
       <section id="schedule" className="section-padding bg-background">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Class Schedule</h2>
-            <p className="text-xl text-muted-foreground">Choose the class that fits your level and schedule</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              {getContent('schedule_info', 'title', 'Class Schedule')}
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              {getContent('schedule_info', 'subtitle', 'Choose the class that fits your level and schedule')}
+            </p>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Beginner Class */}
-            <Card className="hover:shadow-xl transition-shadow duration-300">
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-2xl">Beginners</CardTitle>
-                  <Badge className="bg-accent text-accent-foreground">New Students</Badge>
-                </div>
-                <CardDescription className="text-base">
-                  Perfect for those new to Taekwondo
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-start gap-2">
-                  <Calendar className="w-5 h-5 text-primary mt-1" />
-                  <div>
-                    <p className="font-semibold">Monday - Friday</p>
-                    <p className="text-sm text-muted-foreground">6:00 PM - 7:00 PM</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2">
-                  <Target className="w-5 h-5 text-primary mt-1" />
-                  <div>
-                    <p className="text-sm">Basic stances, blocks, kicks, and forms</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {schedules.length > 0 ? (
+              schedules.map((schedule) => (
+                <Card key={schedule.id} className="hover:shadow-xl transition-shadow duration-300">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <CardTitle className="text-2xl">{schedule.class_name}</CardTitle>
+                      {schedule.level && (
+                        <Badge className="bg-primary text-primary-foreground">{schedule.level}</Badge>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-start gap-2">
+                      <Calendar className="w-5 h-5 text-primary mt-1" />
+                      <div>
+                        <p className="font-semibold">{schedule.days}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {formatTime(schedule.start_time)} - {formatTime(schedule.end_time)}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <>
+                {/* Fallback: Beginner Class */}
+                <Card className="hover:shadow-xl transition-shadow duration-300">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <CardTitle className="text-2xl">Beginners</CardTitle>
+                      <Badge className="bg-accent text-accent-foreground">New Students</Badge>
+                    </div>
+                    <CardDescription className="text-base">
+                      Perfect for those new to Taekwondo
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-start gap-2">
+                      <Calendar className="w-5 h-5 text-primary mt-1" />
+                      <div>
+                        <p className="font-semibold">Monday - Friday</p>
+                        <p className="text-sm text-muted-foreground">6:00 PM - 7:00 PM</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <Target className="w-5 h-5 text-primary mt-1" />
+                      <div>
+                        <p className="text-sm">Basic stances, blocks, kicks, and forms</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-            {/* Intermediate & Advanced Class */}
-            <Card className="hover:shadow-xl transition-shadow duration-300 border-primary">
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-2xl">Intermediate & Advanced</CardTitle>
-                  <Badge className="bg-primary text-primary-foreground">Yellow Belt+</Badge>
-                </div>
-                <CardDescription className="text-base">
-                  Advanced techniques, sparring & competition prep
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-start gap-2">
-                  <Calendar className="w-5 h-5 text-primary mt-1" />
-                  <div>
-                    <p className="font-semibold">Monday - Friday</p>
-                    <p className="text-sm text-muted-foreground">8:00 PM - 9:00 PM</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2">
-                  <Target className="w-5 h-5 text-primary mt-1" />
-                  <div>
-                    <p className="text-sm">Advanced kicks, poomsae, sparring & competition training</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                {/* Fallback: Intermediate & Advanced Class */}
+                <Card className="hover:shadow-xl transition-shadow duration-300 border-primary">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <CardTitle className="text-2xl">Intermediate & Advanced</CardTitle>
+                      <Badge className="bg-primary text-primary-foreground">Yellow Belt+</Badge>
+                    </div>
+                    <CardDescription className="text-base">
+                      Advanced techniques, sparring & competition prep
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-start gap-2">
+                      <Calendar className="w-5 h-5 text-primary mt-1" />
+                      <div>
+                        <p className="font-semibold">Monday - Friday</p>
+                        <p className="text-sm text-muted-foreground">8:00 PM - 9:00 PM</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <Target className="w-5 h-5 text-primary mt-1" />
+                      <div>
+                        <p className="text-sm">Advanced kicks, poomsae, sparring & competition training</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -203,65 +320,106 @@ const Index = () => {
       <section id="membership" className="section-padding bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Fee Structure</h2>
-            <p className="text-xl text-muted-foreground">Simple and affordable pricing for everyone</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              {getContent('pricing_info', 'title', 'Fee Structure')}
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              {getContent('pricing_info', 'subtitle', 'Simple and affordable pricing for everyone')}
+            </p>
           </div>
-          <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-            {/* Admission Fee */}
-            <Card className="hover:shadow-xl transition-shadow duration-300 border-2 border-primary">
-              <CardHeader className="text-center">
-                <CardTitle className="text-3xl mb-2">Admission Fee</CardTitle>
-                <div className="text-4xl font-bold text-primary">₹2,500</div>
-                <CardDescription className="text-base">One-time payment</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>Complete training uniform included</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>Registration & enrollment</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>Access to all class levels</span>
-                </div>
-                <a href="https://wa.me/919354720445?text=Hi%2C%20I%20want%20to%20join%20KTC%20Taekwondo%20classes" target="_blank" rel="noopener noreferrer" className="w-full">
-                  <Button className="w-full mt-6">
-                    Join Now
-                  </Button>
-                </a>
-              </CardContent>
-            </Card>
+          <div className={`grid gap-8 max-w-4xl mx-auto ${pricingPlans.length > 2 ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}>
+            {pricingPlans.length > 0 ? (
+              pricingPlans.map((plan) => (
+                <Card 
+                  key={plan.id} 
+                  className={`hover:shadow-xl transition-shadow duration-300 ${plan.is_featured ? 'border-2 border-primary' : ''}`}
+                >
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-3xl mb-2">{plan.plan_name}</CardTitle>
+                    <div className="text-4xl font-bold text-primary">₹{plan.price.toLocaleString()}</div>
+                    <CardDescription className="text-base">
+                      {plan.duration === 'one-time' ? 'One-time payment' : `per ${plan.duration}`}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {plan.features?.map((feature, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <CheckCircle2 className="w-5 h-5 text-primary" />
+                        <span>{feature}</span>
+                      </div>
+                    ))}
+                    <a 
+                      href="https://wa.me/919354720445?text=Hi%2C%20I%20want%20to%20join%20KTC%20Taekwondo%20classes" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="w-full block"
+                    >
+                      <Button className="w-full mt-6" variant={plan.is_featured ? 'default' : 'outline'}>
+                        Join Now
+                      </Button>
+                    </a>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <>
+                {/* Fallback: Admission Fee */}
+                <Card className="hover:shadow-xl transition-shadow duration-300 border-2 border-primary">
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-3xl mb-2">Admission Fee</CardTitle>
+                    <div className="text-4xl font-bold text-primary">₹2,500</div>
+                    <CardDescription className="text-base">One-time payment</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5 text-primary" />
+                      <span>Complete training uniform included</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5 text-primary" />
+                      <span>Registration & enrollment</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5 text-primary" />
+                      <span>Access to all class levels</span>
+                    </div>
+                    <a href="https://wa.me/919354720445?text=Hi%2C%20I%20want%20to%20join%20KTC%20Taekwondo%20classes" target="_blank" rel="noopener noreferrer" className="w-full">
+                      <Button className="w-full mt-6">
+                        Join Now
+                      </Button>
+                    </a>
+                  </CardContent>
+                </Card>
 
-            {/* Monthly Fee */}
-            <Card className="hover:shadow-xl transition-shadow duration-300">
-              <CardHeader className="text-center">
-                <CardTitle className="text-3xl mb-2">Monthly Fee</CardTitle>
-                <div className="text-4xl font-bold text-primary">₹1,500</div>
-                <CardDescription className="text-base">per month</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>Unlimited class attendance</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>All skill levels welcome</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-primary" />
-                  <span>Belt testing included</span>
-                </div>
-                <a href="https://wa.me/919354720445?text=Hi%2C%20I%20want%20to%20enroll%20for%20monthly%20classes" target="_blank" rel="noopener noreferrer" className="w-full">
-                  <Button className="w-full mt-6" variant="outline">
-                    Enroll Now
-                  </Button>
-                </a>
-              </CardContent>
-            </Card>
+                {/* Fallback: Monthly Fee */}
+                <Card className="hover:shadow-xl transition-shadow duration-300">
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-3xl mb-2">Monthly Fee</CardTitle>
+                    <div className="text-4xl font-bold text-primary">₹1,500</div>
+                    <CardDescription className="text-base">per month</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5 text-primary" />
+                      <span>Unlimited class attendance</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5 text-primary" />
+                      <span>All skill levels welcome</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5 text-primary" />
+                      <span>Belt testing included</span>
+                    </div>
+                    <a href="https://wa.me/919354720445?text=Hi%2C%20I%20want%20to%20enroll%20for%20monthly%20classes" target="_blank" rel="noopener noreferrer" className="w-full">
+                      <Button className="w-full mt-6" variant="outline">
+                        Enroll Now
+                      </Button>
+                    </a>
+                  </CardContent>
+                </Card>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -270,8 +428,12 @@ const Index = () => {
       <section className="section-padding bg-background">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Student Achievements</h2>
-            <p className="text-xl text-muted-foreground">Celebrating excellence and dedication</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              {getContent('achievements_info', 'title', 'Student Achievements')}
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              {getContent('achievements_info', 'subtitle', 'Celebrating excellence and dedication')}
+            </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center space-y-3">
@@ -310,8 +472,12 @@ const Index = () => {
       <section id="gallery" className="section-padding bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Gallery</h2>
-            <p className="text-xl text-muted-foreground">Moments from our training sessions and ceremonies</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              {getContent('gallery_info', 'title', 'Gallery')}
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              {getContent('gallery_info', 'subtitle', 'Moments from our training sessions and ceremonies')}
+            </p>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
             {/* Database photos */}
@@ -407,9 +573,7 @@ const Index = () => {
                       <div>
                         <h3 className="font-semibold text-lg mb-1">Location</h3>
                         <p className="text-muted-foreground">
-                          Rajendra Nagar Sector 2<br />
-                          Shahibabad<br />
-                          Near Karan Gate Police Choki
+                          {contactInfo?.address || 'Rajendra Nagar Sector 2, Shahibabad, Near Karan Gate Police Choki'}
                         </p>
                       </div>
                     </div>
@@ -420,9 +584,9 @@ const Index = () => {
                       </div>
                       <div>
                         <h3 className="font-semibold text-lg mb-1">Phone</h3>
-                        <p className="text-muted-foreground">+91 93547 20445</p>
+                        <p className="text-muted-foreground">{contactInfo?.phone || '+91 93547 20445'}</p>
                         <a 
-                          href="https://wa.me/919354720445"
+                          href={`https://wa.me/${(contactInfo?.phone || '+91 93547 20445').replace(/\D/g, '')}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-2 mt-2 text-sm text-primary hover:text-primary/80 transition-colors"
@@ -433,15 +597,17 @@ const Index = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                        <Mail className="w-6 h-6 text-primary" />
+                    {contactInfo?.email && (
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-6 h-6 text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-lg mb-1">Email</h3>
+                          <p className="text-muted-foreground">{contactInfo.email}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-lg mb-1">Email</h3>
-                        <p className="text-muted-foreground">bkhatri899@gmail.com</p>
-                      </div>
-                    </div>
+                    )}
 
                     <div className="flex items-start gap-4">
                       <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
@@ -462,7 +628,7 @@ const Index = () => {
 
               {/* Google Maps */}
               <a 
-                href="https://www.google.com/maps/search/Rajendra+Nagar+Sector+2+Shahibabad+Near+Karan+Gate+Police+Choki"
+                href={`https://www.google.com/maps/search/${encodeURIComponent(contactInfo?.address || 'Rajendra Nagar Sector 2 Shahibabad Near Karan Gate Police Choki')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full h-64 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
@@ -493,7 +659,7 @@ const Index = () => {
               <p className="text-xl font-bold mb-2">KTC Club</p>
               <p className="text-sm opacity-80 mb-1">Khatri Taekwondo Club</p>
               <p className="text-sm opacity-80">
-                Building character, confidence, and champions since 2005
+                {getContent('footer_main', 'tagline', 'Building character, confidence, and champions since 2005')}
               </p>
             </div>
             <Link 
@@ -503,7 +669,7 @@ const Index = () => {
               Admin Login
             </Link>
             <p className="text-xs opacity-60">
-              © 2024 KTC Club. All rights reserved.
+              {getContent('footer_main', 'copyright', '© 2024 KTC Club. All rights reserved.')}
             </p>
           </div>
         </div>
