@@ -65,12 +65,19 @@ interface ContactInfo {
   email: string;
 }
 
+interface ImageSettings {
+  hero_image: string;
+  instructor_image: string;
+  about_background: string;
+}
+
 const Index = () => {
   const [dbPhotos, setDbPhotos] = useState<GalleryPhoto[]>([]);
   const [pageBlocks, setPageBlocks] = useState<Record<string, Record<string, any>>>({});
   const [pricingPlans, setPricingPlans] = useState<PricingPlan[]>([]);
   const [schedules, setSchedules] = useState<ClassSchedule[]>([]);
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
+  const [siteImages, setSiteImages] = useState<ImageSettings | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -78,7 +85,7 @@ const Index = () => {
       setLoading(true);
       
       // Fetch all data in parallel
-      const [photosRes, blocksRes, pricingRes, schedulesRes, contactRes] = await Promise.all([
+      const [photosRes, blocksRes, pricingRes, schedulesRes, contactRes, imagesRes] = await Promise.all([
         supabase
           .from('gallery_photos')
           .select('id, image_url, title')
@@ -102,6 +109,11 @@ const Index = () => {
           .from('website_settings')
           .select('setting_value')
           .eq('setting_key', 'contact')
+          .maybeSingle(),
+        supabase
+          .from('website_settings')
+          .select('setting_value')
+          .eq('setting_key', 'images')
           .maybeSingle()
       ]);
       
@@ -118,6 +130,7 @@ const Index = () => {
       if (pricingRes.data) setPricingPlans(pricingRes.data);
       if (schedulesRes.data) setSchedules(schedulesRes.data);
       if (contactRes.data) setContactInfo(contactRes.data.setting_value as unknown as ContactInfo);
+      if (imagesRes.data) setSiteImages(imagesRes.data.setting_value as unknown as ImageSettings);
       
       setLoading(false);
     };
@@ -147,7 +160,7 @@ const Index = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${heroImage})`,
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${siteImages?.hero_image || heroImage})`,
           }}
         />
         <div className="relative z-10 text-center px-6 max-w-5xl animate-fade-in">
@@ -178,7 +191,7 @@ const Index = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="animate-fade-in">
               <img 
-                src={instructorImage} 
+                src={siteImages?.instructor_image || instructorImage} 
                 alt="Khatri sir teaching belt tying technique to student"
                 className="rounded-lg shadow-2xl w-full h-auto object-contain"
               />
