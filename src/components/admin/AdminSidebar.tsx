@@ -13,7 +13,8 @@ import {
   Settings,
   Phone,
   LogOut,
-  ExternalLink
+  ExternalLink,
+  Video
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -25,6 +26,7 @@ const navItems = [
   { to: '/admin/pricing', icon: DollarSign, label: 'Pricing Manager' },
   { to: '/admin/achievements', icon: Trophy, label: 'Achievements' },
   { to: '/admin/gallery', icon: Images, label: 'Gallery Manager' },
+  { to: '/admin/videos', icon: Video, label: 'Video Manager' },
   { to: '/admin/settings', icon: Settings, label: 'Site Settings' },
   { to: '/admin/contact', icon: Phone, label: 'Contact Settings' },
 ];
