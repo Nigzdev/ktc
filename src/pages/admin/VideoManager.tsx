@@ -2,11 +2,9 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Trash2, Plus, RefreshCw, Video, Youtube } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Trash2, Upload, RefreshCw, Video } from 'lucide-react';
 
 interface VideoItem {
   id: string;
@@ -23,13 +21,7 @@ const VideoManager = () => {
   const { toast } = useToast();
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [adding, setAdding] = useState(false);
-  const [newVideo, setNewVideo] = useState({
-    title: '',
-    description: '',
-    video_url: '',
-    video_type: 'youtube'
-  });
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchVideos();
@@ -47,53 +39,79 @@ const VideoManager = () => {
     setLoading(false);
   };
 
-  const extractYoutubeId = (url: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
-  };
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-  const getYoutubeThumbnail = (url: string) => {
-    const videoId = extractYoutubeId(url);
-    return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
-  };
+    setUploading(true);
 
-  const addVideo = async () => {
-    if (!newVideo.video_url.trim()) {
-      toast({ title: 'Please enter a video URL', variant: 'destructive' });
-      return;
-    }
+    for (const file of Array.from(files)) {
+      try {
+        // Validate file size (max 100MB for videos)
+        if (file.size > 100 * 1024 * 1024) {
+          toast({
+            title: 'File too large',
+            description: `${file.name} exceeds 100MB limit`,
+            variant: 'destructive'
+          });
+          continue;
+        }
 
-    setAdding(true);
-    try {
-      const thumbnail = newVideo.video_type === 'youtube' 
-        ? getYoutubeThumbnail(newVideo.video_url) 
-        : null;
+        // Validate file type
+        if (!file.type.startsWith('video/')) {
+          toast({
+            title: 'Invalid file type',
+            description: `${file.name} is not a video file`,
+            variant: 'destructive'
+          });
+          continue;
+        }
 
-      const { error } = await supabase
-        .from('videos')
-        .insert({
-          title: newVideo.title || null,
-          description: newVideo.description || null,
-          video_url: newVideo.video_url,
-          video_type: newVideo.video_type,
-          thumbnail_url: thumbnail,
-          display_order: videos.length
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('videos')
+          .upload(fileName, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('videos')
+          .getPublicUrl(fileName);
+
+        const { error: insertError } = await supabase
+          .from('videos')
+          .insert({
+            video_url: publicUrl,
+            title: file.name.replace(/\.[^/.]+$/, ''),
+            video_type: 'uploaded',
+            display_order: videos.length
+          });
+
+        if (insertError) throw insertError;
+      } catch (error: any) {
+        toast({
+          title: 'Upload failed',
+          description: error.message,
+          variant: 'destructive'
         });
-
-      if (error) throw error;
-
-      toast({ title: 'Video added successfully!' });
-      setNewVideo({ title: '', description: '', video_url: '', video_type: 'youtube' });
-      fetchVideos();
-    } catch (error: any) {
-      toast({ title: 'Failed to add video', description: error.message, variant: 'destructive' });
+      }
     }
-    setAdding(false);
+
+    toast({ title: 'Videos uploaded successfully!' });
+    fetchVideos();
+    setUploading(false);
   };
 
-  const deleteVideo = async (id: string) => {
+  const deleteVideo = async (id: string, videoUrl: string) => {
     try {
+      // Extract filename from URL and delete from storage
+      const fileName = videoUrl.split('/').pop();
+      if (fileName) {
+        await supabase.storage.from('videos').remove([fileName]);
+      }
+
       const { error } = await supabase
         .from('videos')
         .delete()
@@ -107,10 +125,10 @@ const VideoManager = () => {
     }
   };
 
-  const updateVideo = async (id: string, field: string, value: string) => {
+  const updateVideoTitle = async (id: string, title: string) => {
     const { error } = await supabase
       .from('videos')
-      .update({ [field]: value, updated_at: new Date().toISOString() })
+      .update({ title, updated_at: new Date().toISOString() })
       .eq('id', id);
 
     if (error) {
@@ -143,52 +161,29 @@ const VideoManager = () => {
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Video Manager</h1>
-        <p className="text-muted-foreground">Add and manage videos for your website</p>
+        <p className="text-muted-foreground">Upload and manage videos for your website</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Plus className="w-5 h-5" />
-            Add New Video
-          </CardTitle>
-          <CardDescription>Add YouTube or other video URLs</CardDescription>
+          <CardTitle>Upload Videos</CardTitle>
+          <CardDescription>Add video files from your device (max 100MB each)</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              placeholder="Video Title"
-              value={newVideo.title}
-              onChange={(e) => setNewVideo({ ...newVideo, title: e.target.value })}
-            />
-            <Select
-              value={newVideo.video_type}
-              onValueChange={(value) => setNewVideo({ ...newVideo, video_type: value })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Video Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="youtube">YouTube</SelectItem>
-                <SelectItem value="vimeo">Vimeo</SelectItem>
-                <SelectItem value="direct">Direct URL</SelectItem>
-              </SelectContent>
-            </Select>
+        <CardContent>
+          <div className="flex items-center gap-4">
+            <label className="flex items-center gap-2 px-4 py-2 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted transition-colors">
+              <Upload className="w-5 h-5" />
+              <span>{uploading ? 'Uploading...' : 'Choose Video Files'}</span>
+              <Input
+                type="file"
+                accept="video/*"
+                multiple
+                onChange={handleVideoUpload}
+                disabled={uploading}
+                className="hidden"
+              />
+            </label>
           </div>
-          <Input
-            placeholder="Video URL (e.g., https://www.youtube.com/watch?v=...)"
-            value={newVideo.video_url}
-            onChange={(e) => setNewVideo({ ...newVideo, video_url: e.target.value })}
-          />
-          <Textarea
-            placeholder="Video Description (optional)"
-            value={newVideo.description}
-            onChange={(e) => setNewVideo({ ...newVideo, description: e.target.value })}
-          />
-          <Button onClick={addVideo} disabled={adding}>
-            {adding ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
-            Add Video
-          </Button>
         </CardContent>
       </Card>
 
@@ -202,7 +197,7 @@ const VideoManager = () => {
         </CardHeader>
         <CardContent>
           {videos.length === 0 ? (
-            <p className="text-muted-foreground text-center py-8">No videos added yet.</p>
+            <p className="text-muted-foreground text-center py-8">No videos uploaded yet.</p>
           ) : (
             <div className="space-y-4">
               {videos.map((video) => (
@@ -211,19 +206,14 @@ const VideoManager = () => {
                   className={`border rounded-lg p-4 ${!video.is_active ? 'opacity-50' : ''}`}
                 >
                   <div className="flex flex-col md:flex-row gap-4">
-                    {/* Thumbnail */}
-                    <div className="w-full md:w-48 flex-shrink-0">
-                      {video.thumbnail_url ? (
-                        <img
-                          src={video.thumbnail_url}
-                          alt={video.title || 'Video thumbnail'}
-                          className="w-full h-28 object-cover rounded"
-                        />
-                      ) : (
-                        <div className="w-full h-28 bg-muted rounded flex items-center justify-center">
-                          <Youtube className="w-8 h-8 text-muted-foreground" />
-                        </div>
-                      )}
+                    {/* Video Preview */}
+                    <div className="w-full md:w-64 flex-shrink-0">
+                      <video
+                        src={video.video_url}
+                        className="w-full h-36 object-cover rounded bg-black"
+                        controls
+                        preload="metadata"
+                      />
                     </div>
                     
                     {/* Details */}
@@ -233,18 +223,10 @@ const VideoManager = () => {
                         onChange={(e) => setVideos(videos.map(v => 
                           v.id === video.id ? { ...v, title: e.target.value } : v
                         ))}
-                        onBlur={(e) => updateVideo(video.id, 'title', e.target.value)}
+                        onBlur={(e) => updateVideoTitle(video.id, e.target.value)}
                         placeholder="Video title"
                       />
-                      <Input
-                        value={video.video_url}
-                        onChange={(e) => setVideos(videos.map(v => 
-                          v.id === video.id ? { ...v, video_url: e.target.value } : v
-                        ))}
-                        onBlur={(e) => updateVideo(video.id, 'video_url', e.target.value)}
-                        placeholder="Video URL"
-                        className="text-sm"
-                      />
+                      <p className="text-xs text-muted-foreground truncate">{video.video_url}</p>
                       <div className="flex items-center gap-2 pt-2">
                         <Button
                           variant={video.is_active ? 'secondary' : 'outline'}
@@ -253,7 +235,6 @@ const VideoManager = () => {
                         >
                           {video.is_active ? 'Active' : 'Inactive'}
                         </Button>
-                        <span className="text-xs text-muted-foreground capitalize">{video.video_type}</span>
                       </div>
                     </div>
                     
@@ -262,7 +243,7 @@ const VideoManager = () => {
                       <Button
                         variant="destructive"
                         size="icon"
-                        onClick={() => deleteVideo(video.id)}
+                        onClick={() => deleteVideo(video.id, video.video_url)}
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
