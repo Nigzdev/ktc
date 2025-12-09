@@ -17,6 +17,7 @@ import ScheduleManager from "./pages/admin/ScheduleManager";
 import PricingManager from "./pages/admin/PricingManager";
 import AchievementsManager from "./pages/admin/AchievementsManager";
 import GalleryManager from "./pages/admin/GalleryManager";
+import VideoManager from "./pages/admin/VideoManager";
 import SiteSettings from "./pages/admin/SiteSettings";
 import ContactSettings from "./pages/admin/ContactSettings";
 
@@ -42,6 +43,7 @@ const App = () => (
               <Route path="pricing" element={<PricingManager />} />
               <Route path="achievements" element={<AchievementsManager />} />
               <Route path="gallery" element={<GalleryManager />} />
+              <Route path="videos" element={<VideoManager />} />
               <Route path="settings" element={<SiteSettings />} />
               <Route path="contact" element={<ContactSettings />} />
             </Route>
